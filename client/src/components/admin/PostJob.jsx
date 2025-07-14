@@ -23,25 +23,27 @@ const PostJob = () => {
         experience: '',
         position: 0,
         companyId: '',
+        
     });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
     const { companies } = useSelector((store) => store.company);
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     };
 
-    const selectChangeHandler = (value) => {
-        const selectedCompany = companies.find((company) => company.name.toLowerCase() === value);
-        if (selectedCompany) {
-            setInput({ ...input, companyId: selectedCompany._id });
-        }
+    const selectChangeHandler = (companyId) => {
+        setInput({ ...input, companyId });
     };
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        if (!input.companyId) {
+            toast.error("Please select a company");
+            return;
+        }
+
         try {
             setLoading(true);
             const res = await axios.post(`${JOB_API_END_POINT}/post`, input, {
@@ -50,6 +52,7 @@ const PostJob = () => {
                 },
                 withCredentials: true,
             });
+
             if (res.data.success) {
                 toast.success(res.data.message);
                 navigate('/admin/jobs');
@@ -62,162 +65,90 @@ const PostJob = () => {
     };
 
     return (
-
-
         <div className="bg-white min-h-screen ">
             <Navbar />
             <motion.div
                 className="flex items-center justify-center w-full my-5 pt-10"
-
-                initial={ { opacity: 0, y: -20 } }
-                animate={ { opacity: 1, y: 0 } }
-                transition={ { duration: 0.6 } }
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
             >
                 <form
-                    onSubmit={ submitHandler }
+                    onSubmit={submitHandler}
                     className="p-8 max-w-4xl w-full bg-white border border-blue-300 shadow-lg rounded-md"
                 >
                     <motion.div
                         className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                        initial={ { opacity: 0 } }
-                        animate={ { opacity: 1 } }
-                        transition={ { duration: 0.7 } }
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.7 }}
                     >
                         <div>
-                            <Label>
-                                Title <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                type="text"
-                                name="title"
-                                value={ input.title }
-                                onChange={ changeEventHandler }
-                                className="my-1 border-blue-300 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <Label>Title <span className="text-red-500">*</span></Label>
+                            <Input type="text" name="title" value={input.title} onChange={changeEventHandler} />
                         </div>
                         <div>
-                            <Label>
-                                Description <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                type="text"
-                                name="description"
-                                value={ input.description }
-                                onChange={ changeEventHandler }
-                                className="my-1 border-blue-300 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <Label>Description <span className="text-red-500">*</span></Label>
+                            <Input type="text" name="description" value={input.description} onChange={changeEventHandler} />
                         </div>
                         <div>
-                            <Label>
-                                Requirements <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                type="text"
-                                name="requirements"
-                                value={ input.requirements }
-                                onChange={ changeEventHandler }
-                                className="my-1 border-blue-300 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <Label>Requirements <span className="text-red-500">*</span></Label>
+                            <Input type="text" name="requirements" value={input.requirements} onChange={changeEventHandler} />
                         </div>
                         <div>
-                            <Label>
-                                Salary LPA <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                type="number"
-                                name="salary"
-                                value={ input.salary }
-                                onChange={ changeEventHandler }
-                                className="my-1 border-blue-300 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <Label>Salary LPA <span className="text-red-500">*</span></Label>
+                            <Input type="number" name="salary" value={input.salary} onChange={changeEventHandler} />
                         </div>
                         <div>
-                            <Label>
-                                Location <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                type="text"
-                                name="location"
-                                value={ input.location }
-                                onChange={ changeEventHandler }
-                                className="my-1 border-blue-300 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <Label>Location <span className="text-red-500">*</span></Label>
+                            <Input type="text" name="location" value={input.location} onChange={changeEventHandler} />
                         </div>
                         <div>
-                            <Label>
-                                Job Type <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                type="text"
-                                name="jobType"
-                                value={ input.jobType }
-                                onChange={ changeEventHandler }
-                                className="my-1 border-blue-300 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <Label>Job Type <span className="text-red-500">*</span></Label>
+                            <Input type="text" name="jobType" value={input.jobType} onChange={changeEventHandler} />
                         </div>
                         <div>
-                            <Label>
-                                Experience Level <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                type="text"
-                                name="experience"
-                                value={ input.experience }
-                                onChange={ changeEventHandler }
-                                className="my-1 border-blue-300 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <Label>Experience Level <span className="text-red-500">*</span></Label>
+                            <Input type="text" name="experience" value={input.experience} onChange={changeEventHandler} />
                         </div>
                         <div>
-                            <Label>
-                                No of Positions <span className="text-red-500">*</span>
-                            </Label>
-                            <Input
-                                type="number"
-                                name="position"
-                                value={ input.position }
-                                onChange={ changeEventHandler }
-                                className="my-1 border-blue-300 focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <Label>No of Positions <span className="text-red-500">*</span></Label>
+                            <Input type="number" name="position" value={input.position} onChange={changeEventHandler} />
                         </div>
-                        { companies.length > 0 && (
+                        {companies.length > 0 && (
                             <div>
-                                <Label>
-                                    Company <span className="text-red-500">*</span>
-                                </Label>
-                                <Select onValueChange={ selectChangeHandler }>
+                                <Label>Company <span className="text-red-500">*</span></Label>
+                                <Select value={input.companyId} onValueChange={selectChangeHandler}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select a Company" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectGroup>
-                                            { companies.map((company) => (
-                                                <SelectItem key={ company._id } value={ company.name.toLowerCase() }>
-                                                    { company.name }
+                                            {companies.map((company) => (
+                                                <SelectItem key={company._id} value={company._id}>
+                                                    {company.name}
                                                 </SelectItem>
-                                            )) }
+                                            ))}
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
                             </div>
-                        ) }
+                        )}
                     </motion.div>
-                    { loading ? (
+                    {loading ? (
                         <Button className="w-full my-4 bg-blue-500 text-white">
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
                         </Button>
                     ) : (
-                        <Button
-                            type="submit"
-                            className="w-full my-4 bg-blue-500 hover:bg-blue-600 text-white transition duration-300"
-                        >
+                        <Button type="submit" className="w-full my-4 bg-blue-500 hover:bg-blue-600 text-white">
                             Post New Job
                         </Button>
-                    ) }
-                    { companies.length === 0 && (
+                    )}
+                    {companies.length === 0 && (
                         <p className="text-xs text-red-600 font-bold text-center my-3">
                             *Please register a company first, before posting jobs.
                         </p>
-                    ) }
+                    )}
                 </form>
             </motion.div>
         </div>

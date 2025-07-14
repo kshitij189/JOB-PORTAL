@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 
-const isAuthenticated = async(req, res, next) => {
+const isAuthenticated = async (req, res, next) => {
     try {
         const token = req.cookies.token;
 
         if (!token) {
             return res.status(401).json({
-                message: "Please login frist then proceed",
+                message: "Please login first then proceed",
                 success: false,
             });
         }

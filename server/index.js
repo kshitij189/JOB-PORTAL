@@ -34,8 +34,8 @@ app.use("/api/v1/chatboat", chatboatRoutes);
 // ✅ Startup logic
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`✅ Server running at port ${PORT}`);
+    console.log(`Server running at port ${PORT}`);
   });
 }).catch((err) => {
-  console.error("❌ Failed to connect to MongoDB:", err);
+  console.error("Failed to connect to MongoDB:", err);
 });

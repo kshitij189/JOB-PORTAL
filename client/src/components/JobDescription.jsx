@@ -107,6 +107,8 @@ const JobDescription = () => {
                                 >
                                     { isApplied ? 'Already Applied' : 'Apply Now' }
                                 </Button>
+
+                                
                             </div>
                         </div>
 

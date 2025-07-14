@@ -4,7 +4,7 @@ import { Job } from "../models/job.model.js";
 export const postJob = async(req, res) => {
     try {
         const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
-        const userId = req.id;
+        const userId = req.id || "temp-user-123";
 
         if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
             return res.status(400).json({
@@ -22,7 +22,8 @@ export const postJob = async(req, res) => {
             experienceLevel: experience,
             position,
             company: companyId,
-            created_by: userId
+            created_by: userId,
+            
         });
         return res.status(201).json({
             message: "New job created successfully.",
@@ -102,3 +103,23 @@ export const getAdminJobs = async(req, res) => {
 }
 
 // need to implement delete a job post for admin
+export const deleteJob = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const job = await Job.findById(jobId);
+
+        if (!job) {
+            return res.status(404).json({ message: "Job not found", success: false });
+        }
+
+        if (job.created_by.toString() !== req.id) {
+            return res.status(403).json({ message: "Unauthorized", success: false });
+        }
+
+        await job.deleteOne();
+        return res.status(200).json({ message: "Job deleted successfully", success: true });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Server error", success: false });
+    }
+};

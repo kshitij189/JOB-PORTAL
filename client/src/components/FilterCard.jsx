@@ -9,11 +9,11 @@ const filterData = [
         array: ["Delhi NCR", "Bangalore", "Hyderabad", "Pune", "Mumbai"],
     },
     {
-        filterType: "Industry",
+        filterType: "Job Role",
         array: ["Frontend Developer", "Backend Developer", "FullStack Developer"],
     },
     {
-        filterType: "Salary",
+        filterType: "Required Skills",
         array: ["React.js", "Java", "DevOps", "Swift", "Flutter", "AWS"]
     },
 ];
@@ -21,8 +21,8 @@ const filterData = [
 const FilterCard = () => {
     const [selectedFilters, setSelectedFilters] = useState({
         Location: [],
-        Industry: [],
-        Salary: []
+        "Job Role": [],
+        "Required Skills": []
     });
 
     const dispatch = useDispatch();
