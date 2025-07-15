@@ -32,8 +32,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const PORT = process.env.PORT || 3000;
-
 // ✅ Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
@@ -41,12 +39,18 @@ app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 app.use("/api/v1/chatboat", chatboatRoutes);
 
+// ✅ Root Route (for Render or health check)
+app.get("/", (req, res) => {
+  res.send("✅ Job Portal Backend is running successfully!");
+});
+
 // ✅ Startup
+const PORT = process.env.PORT || 3000;
+
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
       console.log(`🚀 Server running at port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
-
     });
   })
   .catch((err) => {
