@@ -8,34 +8,47 @@ import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
 import chatboatRoutes from "./routes/chatboatroutes.js";
-dotenv.config({});
+
+// ✅ Load env file based on environment
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '.env.production' });
+} else {
+  dotenv.config(); // defaults to .env
+}
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// ✅ CORS setup for dev and production
 const corsOptions = {
-    origin: 'http://localhost:5173',
-    credentials: true,
-}
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://client-gxktt5zzd-kshitij189s-projects.vercel.app' 
+    : 'http://localhost:5173',
+  credentials: true,
+};
 
 app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 3000;
 
-// Routes
+// ✅ Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 app.use("/api/v1/chatboat", chatboatRoutes);
 
-// ✅ Startup logic
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running at port ${PORT}`);
+// ✅ Startup
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Failed to connect to MongoDB:", err);
   });
-}).catch((err) => {
-  console.error("Failed to connect to MongoDB:", err);
-});

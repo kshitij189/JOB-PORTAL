@@ -3,5 +3,8 @@ node_modules/
 /server/node_modules
 
 /server/.env
+/server/.env.production
 
+db-backup/
 
+.vercel
