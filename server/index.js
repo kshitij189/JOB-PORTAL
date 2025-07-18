@@ -10,11 +10,9 @@ import applicationRoute from "./routes/application.route.js";
 import chatboatRoutes from "./routes/chatboatroutes.js";
 
 // ✅ Load env file based on environment
-if (process.env.NODE_ENV === 'production') {
-  dotenv.config({ path: '.env.production' });
-} else {
+
   dotenv.config(); // defaults to .env
-}
+
 
 const app = express();
 
