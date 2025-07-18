@@ -25,7 +25,7 @@ app.use(cookieParser());
 // ✅ CORS setup for dev and production
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? 'https://client-gxktt5zzd-kshitij189s-projects.vercel.app' 
+    ? 'https://job-portal-5xbb.onrender.com' 
     : 'http://localhost:5173',
   credentials: true,
 };
@@ -41,7 +41,7 @@ app.use("/api/v1/chatboat", chatboatRoutes);
 
 // ✅ Root Route (for Render or health check)
 app.get("/", (req, res) => {
-  res.send("✅ Job Portal Backend is running successfully!");
+  res.send("Job Portal Backend is running successfully!");
 });
 
 // ✅ Startup
@@ -50,9 +50,9 @@ const PORT = process.env.PORT || 3000;
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`🚀 Server running at port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+      console.log(`Server running at port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
     });
   })
   .catch((err) => {
-    console.error("❌ Failed to connect to MongoDB:", err);
+    console.error("Failed to connect to MongoDB:", err);
   });
