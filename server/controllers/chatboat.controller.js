@@ -1,42 +1,44 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-let conversationHistory = [
-    { role: "system", content: "Give short, concise answers" }
-];
+export const chatboat = async (req, res) => {
+  try {
+    const { message } = req.body;
 
-export const chatboat = async(req, res) => {
-    const userMessage = req.body.message;
-
-    conversationHistory.push({ role: "user", content: userMessage });
-
-    try {
-        const genAI = new GoogleGenerativeAI(process.env.GIMINIAI_API);
-        const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
-        });
-
-        // Add instruction to limit response length
-        const prompt = `Respond to this very briefly in 1-2 lines: ${userMessage}`;
-
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const botResponse = await response.text();
-
-        const formattedBotResponse = formatResponse(botResponse);
-
-        conversationHistory.push({ role: "assistant", content: botResponse });
-
-        return res.status(200).json({
-            message: formattedBotResponse,
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            error: error.message,
-        });
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
     }
-};
 
-function formatResponse(response) {
-    return response.replace(/\*(.*?)\*/g, '$1');
-}                        
+    const API_KEY = process.env.GEMINI_API_KEY;
+    
+    
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: `Reply briefly in 1–2 lines:\n${message}` }]
+          }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      console.error("Gemini API Error:", data);
+      return res.status(response.status).json({ 
+        error: data.error?.message || "API request failed"
+      });
+    }
+
+    const reply = data.candidates[0].content.parts[0].text;
+    res.status(200).json({ message: reply });
+    
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
